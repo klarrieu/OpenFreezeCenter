@@ -18,6 +18,7 @@
 - Run ```install.sh``` from the desktop folder. 
 
 ## Supported Laptop models (tested)
+- MSI GP66 12UGS
 - MSI GP76 11UG
 
 ## Supported Linux Distro (tested)
