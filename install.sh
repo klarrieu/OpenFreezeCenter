@@ -18,7 +18,7 @@ else
     echo "1 -> python3-virtualenv AND python3-venv"
     echo "2 -> PyGObject" 
     echo "3 -> PyCairo" 
-    echo "4 -> Expert" 
+    echo "4 -> Expect" 
     echo "----------Creating Folder for Open Freeze Center----------"
     cd ~/Desktop
     mkdir OFC
@@ -49,7 +49,7 @@ else
     fi
     echo "----------Installing PyCairo----------"
     ~/Desktop/OFC/bin/pip3 install pycairo
-    echo "----------Installing Expert----------"
+    echo "----------Installing Expect----------"
     sudo apt-get install expect
     echo "----------Moving files to virtual environment----------"
     cp -i "${REPO_DIR}/install.sh" ~/Desktop/OFC
