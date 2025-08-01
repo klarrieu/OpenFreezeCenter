@@ -12,6 +12,7 @@ if test -f ~/Desktop/OFC/OFC.py;
 then
     FLAG_3=1
 else
+    REPO_DIR=$(dirname "$(readlink -f "$0")")
     echo "This is a shell script to install all the dependencies required for this software to run."
     echo "Dependencies required are as follows."
     echo "1 -> python3-virtualenv AND python3-venv"
@@ -29,18 +30,34 @@ else
     python3 -m venv ~/Desktop/OFC
     echo "----------Virtual Environment for Open Freeze Center created----------"
     echo "----------Installing PyGObject----------"
-    ~/Desktop/OFC/bin/pip3 install PyGObject
+    # get distro version if ubuntu base, since we need to restrict pygobject version for distro version <24.04
+	RESTRICT_GI_VER=0
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		if [[ $ID == *"ubuntu"* ]] || [[ $ID_LIKE == *"ubuntu"* ]]; then
+		    echo "Running ubuntu-based distro"
+		    if { echo "$VERSION_ID"; echo "22.04.5"; } | sort --version-sort --check=quiet; then
+		        echo "Version is 22.04 or less, restricting pygobject version"
+		        RESTRICT_GI_VER=1
+		    fi
+		fi
+	fi
+    if [ "$RESTRICT_GI_VER" -eq "0" ]; then
+        ~/Desktop/OFC/bin/pip3 install PyGObject
+    else
+        ~/Desktop/OFC/bin/pip3 install "PyGObject<=3.52.0"
+    fi
     echo "----------Installing PyCairo----------"
     ~/Desktop/OFC/bin/pip3 install pycairo
     echo "----------Installing Expert----------"
     sudo apt-get install expect
     echo "----------Moving files to virtual environment----------"
-    cp -i ~/Downloads/OpenFreezeCenter-5/install.sh  ~/Desktop/OFC
-    cp -i ~/Downloads/OpenFreezeCenter-5/file_1.sh  ~/Desktop/OFC
-    cp -i ~/Downloads/OpenFreezeCenter-5/file_2.sh  ~/Desktop/OFC
-    cp -i ~/Downloads/OpenFreezeCenter-5/OFC.py  ~/Desktop/OFC
-    cp -i ~/Downloads/OpenFreezeCenter-5/README.md  ~/Desktop/OFC
-    cp -i ~/Downloads/OpenFreezeCenter-5/LICENSE  ~/Desktop/OFC
+    cp -i "${REPO_DIR}/install.sh" ~/Desktop/OFC
+    cp -i "${REPO_DIR}/file_1.sh" ~/Desktop/OFC
+    cp -i "${REPO_DIR}/file_2.sh" ~/Desktop/OFC
+    cp -i "${REPO_DIR}/OFC.py" ~/Desktop/OFC
+    cp -i "${REPO_DIR}/README.md" ~/Desktop/OFC
+    cp -i "${REPO_DIR}/LICENSE"  ~/Desktop/OFC
     FLAG_3=1
 fi
 
